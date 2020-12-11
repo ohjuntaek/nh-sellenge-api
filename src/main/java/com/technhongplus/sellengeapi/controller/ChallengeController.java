@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class ChallengeController {
@@ -22,6 +24,16 @@ public class ChallengeController {
     public ResponseEntity<?> registerChallenge(@RequestHeader("Login_Member_Id") Long loginMemberId, @RequestBody ChallengeDto challengeDto) {
         Long id = challengeService.registerChallenge(loginMemberId, challengeDto);
         return ResponseEntity.ok().body(id);
+    }
+
+
+    /**
+     * 전체 챌린지 조회
+     */
+    @GetMapping("/challenge")
+    public ResponseEntity<?> getChallenges() {
+        List<ChallengeDto> challengeDtos = challengeService.findChallenge();
+        return ResponseEntity.ok().body(challengeDtos);
     }
 
     /**

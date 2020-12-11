@@ -35,6 +35,29 @@ public class ChallengeDto {
     private String failStandard; // 인증실패기준설명
     private List<String> failStandardImageUrls; // 인증성공기준이미지url
 
+    public static ChallengeDto from(Challenge challenge) {
+        return ChallengeDto.builder()
+                .id(challenge.getId())
+//                .member(challenge.getMember())
+                .repImageUrl(challenge.getRepImageUrl())
+                .itemName(challenge.getItemName())
+                .challengeName(challenge.getChallengeName())
+                .startDate(challenge.getStartDate())
+                .endDate(challenge.getEndDate())
+                .challengeCycle(challenge.getChallengeCycle())
+                .missionContent(challenge.getMissionContent())
+                .minJoinMoney(challenge.getMinJoinMoney())
+                .minMemberCount(challenge.getMinMemberCount())
+                .maxMemberCount(challenge.getMaxMemberCount())
+                .challengeDetailContent(challenge.getChallengeDetailContent())
+                .attachUrls(challenge.getAttachUrls())
+                .successStandard(challenge.getSuccessStandard())
+                .successStandardImageUrls(challenge.getSuccessStandardImageUrls())
+                .failStandard(challenge.getFailStandard())
+                .failStandardImageUrls(challenge.getFailStandardImageUrls())
+                .build();
+    }
+
     public Challenge to(Member seller) {
         return Challenge.builder()
                 .id(id)

@@ -19,7 +19,7 @@ public class Mission {
     @JoinColumn(name = "JOIN_ID")
     private JoinChallenge joinChallenge;
 
-    LocalDateTime proofDate; // 인증성공일시
+    private LocalDateTime proofDate; // 인증일시
 
-    Boolean success; // 성공여부
+    private Boolean success; // 성공여부
 }
