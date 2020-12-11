@@ -22,4 +22,9 @@ public class MemberService {
         memberRepository.save(seller);
         memberRepository.save(member);
     }
+
+    @Transactional
+    public void signUp() {
+
+    }
 }
