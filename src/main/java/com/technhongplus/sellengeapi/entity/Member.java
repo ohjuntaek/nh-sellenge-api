@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
-@Table(name = "MEMBER")
+@Table(name = "MEMBERS")
 public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MEMBER_ID")
@@ -19,7 +19,9 @@ public class Member {
     private String businessNumber;
     private Boolean isSeller;
 
-    public static Member of(String loginId, String name, String businessNumber, Boolean isSeller ) {
-        return new Member(null, loginId, name, businessNumber, isSeller);
+    private String virtualAccount;
+
+    public static Member of(String loginId, String name, String businessNumber, Boolean isSeller) {
+        return new Member(null, loginId, name, businessNumber, isSeller, null);
     }
 }
