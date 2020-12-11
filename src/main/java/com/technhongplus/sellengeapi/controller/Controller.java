@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class Controller {
     @GetMapping("/hello")
-    public ResponseEntity<?> createAccount() {
+    public ResponseEntity<?> healthyCheck() {
         return ResponseEntity.ok().body("hi");
     }
 
