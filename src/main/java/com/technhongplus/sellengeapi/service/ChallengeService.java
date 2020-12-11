@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -41,7 +43,6 @@ public class ChallengeService {
 
     /**
      * 회원이 챌린지에 참가한다.
-     * @return
      */
     @Transactional
     public Long joinChallenge(Long loginMemberId, Long challengeId, JoinChallengeDto joinChallengeDto) {
@@ -55,5 +56,13 @@ public class ChallengeService {
         return save.getId();
     }
 
-
+    /**
+     * 전체 챌린지 조회
+     */
+    public List<ChallengeDto> findChallenge() {
+        List<Challenge> challenges = challengeRepository.findAll();
+        return challenges.stream()
+                .map(ChallengeDto::from)
+                .collect(Collectors.toList());
+    }
 }
