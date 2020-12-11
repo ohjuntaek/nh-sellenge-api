@@ -13,19 +13,33 @@ spring:
       max-file-size: 500MB
       max-request-size: 500MB
 
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/sellenge?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: password
+
   h2:
     console:
       enabled: true
+nh:
+  juntaek:
+    accessToken: aea4f248cce5af78f3cc5c62827bcdf5db1ded061977417a29615b2c3221ceda
 
 logging:
   level:
     org.apache.http: DEBUG
 
-nh:
-  juntaek:
-    accessToken: aea4f248cce5af78f3cc5c62827bcdf5db1ded061977417a29615b2c3221ceda
+---
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sellenge?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: password
+---
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://sellenge-db.cxxtoeaihq4h.us-west-2.rds.amazonaws.com:3306/sellenge-db
+    username: sellenge
+    password: sellenge
+---
+
