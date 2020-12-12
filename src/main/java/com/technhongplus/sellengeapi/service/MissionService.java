@@ -31,17 +31,20 @@ public class MissionService {
     }
 
     @Transactional
-    public void registerMission(Long loginMemberId, MissionDto missionDto){
+    public Long registerMission(Long loginMemberId, MissionDto missionDto){
         JoinChallenge joinChallenge = joinChallengeRepository.findByChallenge_IdAndMember_Id(missionDto.getChallengeId(),loginMemberId);
-        missionRepository.save(Mission.of(joinChallenge,missionDto.getImageUrl(),missionDto.getProofDate()));
+        if (joinChallenge == null) throw new IllegalArgumentException("등록하지 않은 챌린지 입니다.");
+
+        return missionRepository.save(Mission.of(joinChallenge,missionDto.getImageUrl(),missionDto.getProofDate())).getId();
     }
 
     @Transactional
-    public void certifiedMission(Long loginMemberId, Long challengeId, boolean success, LocalDate date){
+    public Long certifiedMission(Long loginMemberId, Long challengeId, boolean success, LocalDate date){
         JoinChallenge joinChallenge = joinChallengeRepository.findByChallenge_IdAndMember_Id(challengeId,loginMemberId);
-        System.out.println(joinChallenge.getId());
+        if (joinChallenge == null) throw new IllegalArgumentException("등록하지 않은 챌린지 입니다.");
+
         Mission mission = missionRepository.findByJoinChallenge_IdAndProofDate(joinChallenge.getId(),date);
         mission.setSuccess(success);
-        missionRepository.save(mission);
+        return missionRepository.save(mission).getId();
     }
 }

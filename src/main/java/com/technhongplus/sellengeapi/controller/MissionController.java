@@ -22,8 +22,7 @@ public class MissionController {
 
     @PostMapping("/mission")
     public ResponseEntity<?> registerMission(@RequestHeader("Login_Member_Id") Long loginMemberId, @RequestBody MissionDto missionDto) {
-        missionService.registerMission(loginMemberId,missionDto);
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok().body(missionService.registerMission(loginMemberId,missionDto));
     }
 
     @GetMapping("/mission/certification")
@@ -31,8 +30,7 @@ public class MissionController {
                                               @RequestParam(name = "challengeId") Long challengeId,
                                               @RequestParam(name = "success") boolean success,
                                               @RequestParam(name = "date") String date){
-        missionService.certifiedMission(loginMemberId,challengeId,success,getLocalDate(date));
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok().body(missionService.certifiedMission(loginMemberId,challengeId,success,getLocalDate(date)));
     }
 
     private LocalDate getLocalDate(String date){
