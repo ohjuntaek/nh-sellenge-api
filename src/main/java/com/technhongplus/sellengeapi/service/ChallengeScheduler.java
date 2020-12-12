@@ -48,21 +48,31 @@ public class ChallengeScheduler {
             //해당 challenge의 참여자
             joinChallenges.stream().forEach(joinChallenge -> {
                 List<Mission> missions = missionRepository.findAllByJoinChallenge_idAndSuccess(joinChallenge.getId(),true);
-                if(missions.size() == days){
+                String sellerAccountNo = challenge.getSeller().getAccountNo();
+                String invAmt = joinChallenge.getJoinAmount().toString();
+
+                HttpHeaders httpHeaders = SellengeApiApplication.getHttpHeaders();
+                NhApiHeader apiHeader = nhTransactionService.buildApiHeader(ApiName.P2PNInterestRepayment.name());
+                Long loanNo = nhTransactionService.getCountNhTx();
+                if(missions.size() >= days){
                     //100% 미션 성공금 지급
-                    String sellerAccountNo = challenge.getSeller().getAccountNo();
-                    String memberVirtualAccountNo = joinChallenge.getMember().getVirtualAccount();
-                    String invAmt = joinChallenge.getJoinAmount().toString();
-
-                    HttpHeaders httpHeaders = SellengeApiApplication.getHttpHeaders();
-                    NhApiHeader apiHeader = nhTransactionService.buildApiHeader(ApiName.P2PNInterestRepayment.name());
-
-                    Long loanNo = nhTransactionService.getCountNhTx();
                     RepaymenDto repaymenDto = RepaymenDto.of(
                         loanNo,
                         sellerAccountNo,
                         invAmt,
                         invAmt,
+                        apiHeader
+                    );
+                    HttpEntity<RepaymenDto> request = new HttpEntity<>(repaymenDto, httpHeaders);
+                    restTemplate.postForObject(ApiName.P2PNInterestRepayment.getUri(), request, RepaymenDto.class);
+                }else if(missions.size() == days*0.8){
+                    //80% 미션 성공금 지급
+                    double inv = Integer.parseInt(invAmt)*0.8;
+                    RepaymenDto repaymenDto = RepaymenDto.of(
+                        loanNo,
+                        sellerAccountNo,
+                        invAmt,
+                        Double.toString(inv),
                         apiHeader
                     );
                     HttpEntity<RepaymenDto> request = new HttpEntity<>(repaymenDto, httpHeaders);
