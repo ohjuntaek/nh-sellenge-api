@@ -27,7 +27,7 @@ class MemberServiceTest {
 //    @Disabled
     void createVirtualAccountTest() {
 //        Long id = memberService.sellerSignUp();
-        Long id = memberService.signUp("user", "일반회원", "0000000000", accountNo, false);
+        Long id = memberService.signUp("user", "일반회원", "0000000000", "3020000003086", false);
 
         entityManager.flush();
         entityManager.clear();

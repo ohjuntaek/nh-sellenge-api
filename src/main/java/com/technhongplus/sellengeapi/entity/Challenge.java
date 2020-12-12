@@ -48,4 +48,7 @@ public class Challenge {
 
     @Convert(converter = ImageUrlsConverter.class)
     private List<String> failStandardImageUrls; // 인증성공기준이미지url
+
+    @Transient
+    private Integer count; // 참여자수
 }

@@ -4,6 +4,7 @@ import com.technhongplus.sellengeapi.ApiName;
 import com.technhongplus.sellengeapi.SellengeApiApplication;
 import com.technhongplus.sellengeapi.dto.ChallengeDto;
 import com.technhongplus.sellengeapi.dto.JoinChallengeDto;
+import com.technhongplus.sellengeapi.dto.exception.JoinAlreadyException;
 import com.technhongplus.sellengeapi.dto.nh.InvestmentDto;
 import com.technhongplus.sellengeapi.dto.nh.NhApiHeader;
 import com.technhongplus.sellengeapi.entity.Challenge;
@@ -20,10 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.technhongplus.sellengeapi.service.NhTransactionService.NH_API_SUCCESS;
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 @Transactional(readOnly = true)
@@ -62,7 +66,12 @@ public class ChallengeService {
         Challenge challenge = challengeRepository.findById(challengeId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        JoinChallenge save = joinChallengeRepository.save(JoinChallenge.of(member, challenge));
+        JoinChallenge joinChallenge = JoinChallenge.of(member, challenge);
+        JoinChallenge find = joinChallengeRepository.findByChallenge_IdAndMember_Id(challengeId, loginMemberId);
+        if (find != null) {
+            throw new JoinAlreadyException();
+        }
+        JoinChallenge save = joinChallengeRepository.save(joinChallenge);
 
         // 투자금 지급 지시
         String sellerAccountNo = challenge.getSeller().getAccountNo();
@@ -95,6 +104,12 @@ public class ChallengeService {
      */
     public List<ChallengeDto> findChallenge() {
         List<Challenge> challenges = challengeRepository.findAll();
+        List<JoinChallenge> joinChallenges = joinChallengeRepository.findAllByChallengeIn(challenges);
+        Map<Challenge, List<JoinChallenge>> map = joinChallenges.stream()
+                .collect(groupingBy(JoinChallenge::getChallenge));
+
+        challenges.forEach(e ->
+                e.setCount(map.getOrDefault(e, Collections.emptyList()).size()));
         return challenges.stream()
                 .map(ChallengeDto::from)
                 .collect(Collectors.toList());

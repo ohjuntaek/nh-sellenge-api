@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "JOIN_CHALLENGE")
 public class JoinChallenge {
     @Id @Column(name = "JOIN_CHALLENGE_ID")
@@ -18,11 +19,13 @@ public class JoinChallenge {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     @NaturalId
+    @EqualsAndHashCode.Include
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CHALLENGE_ID")
     @NaturalId
+    @EqualsAndHashCode.Include
     private Challenge challenge;
 
     public static JoinChallenge of(Member member, Challenge challenge) {

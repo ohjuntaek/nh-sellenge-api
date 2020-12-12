@@ -36,6 +36,7 @@ public class ChallengeDto {
     private List<String> successStandardImageUrls; // 인증성공기준이미지url
     private String failStandard; // 인증실패기준설명
     private List<String> failStandardImageUrls; // 인증성공기준이미지url
+    private Integer count; // 참여자수
 
     public static ChallengeDto from(Challenge challenge) {
         return ChallengeDto.builder()
@@ -58,6 +59,7 @@ public class ChallengeDto {
                 .successStandardImageUrls(challenge.getSuccessStandardImageUrls())
                 .failStandard(challenge.getFailStandard())
                 .failStandardImageUrls(challenge.getFailStandardImageUrls())
+                .count(challenge.getCount())
                 .build();
     }
 
