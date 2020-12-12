@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +24,7 @@ public class MissionService {
     private final JoinChallengeRepository joinChallengeRepository;
 
     @Transactional
-    public List<MissionDto> getMission(Long challengeId, LocalDateTime date){
+    public List<MissionDto> getMission(Long challengeId, LocalDate date){
         Challenge challenge = challengeRepository.findById(challengeId).get();
         List<Mission> missionList = missionRepository.findAllByJoinChallenge_ChallengeAndProofDate(challenge,date);
         return missionList.stream().map(MissionDto::from).collect(Collectors.toList());
@@ -32,14 +32,15 @@ public class MissionService {
 
     @Transactional
     public void registerMission(Long loginMemberId, MissionDto missionDto){
-        JoinChallenge joinChallenge = joinChallengeRepository.findById(missionDto.getChallengeId()).get();
+        JoinChallenge joinChallenge = joinChallengeRepository.findByChallenge_IdAndMember_Id(missionDto.getChallengeId(),loginMemberId);
         missionRepository.save(Mission.of(joinChallenge,missionDto.getImageUrl(),missionDto.getProofDate()));
     }
 
     @Transactional
-    public void certifiedMission(Long loginMemberId, Long challengeId, boolean success){
+    public void certifiedMission(Long loginMemberId, Long challengeId, boolean success, LocalDate date){
         JoinChallenge joinChallenge = joinChallengeRepository.findByChallenge_IdAndMember_Id(challengeId,loginMemberId);
-        Mission mission = missionRepository.findByJoinChallenge_Id(joinChallenge.getId());
+        System.out.println(joinChallenge.getId());
+        Mission mission = missionRepository.findByJoinChallenge_IdAndProofDate(joinChallenge.getId(),date);
         mission.setSuccess(success);
         missionRepository.save(mission);
     }

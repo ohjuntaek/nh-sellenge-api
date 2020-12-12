@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +16,7 @@ public class MissionDto {
     private Long id;
     private Long challengeId; //챌린지 아이디
     private String imageUrl; // 인증 이미지
-    private LocalDateTime proofDate; // 인증 날짜
+    private LocalDate proofDate; // 인증 날짜
 
     public static MissionDto from(Mission mission) {
         return MissionDto.builder()
