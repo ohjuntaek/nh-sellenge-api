@@ -15,12 +15,12 @@ public class MissionController {
 
     private final MissionService missionService;
 
-    @GetMapping("/misson/list")
-    public ResponseEntity<?> getMissionList(@PathVariable(name = "challengeId") Long challengeId, @PathVariable(name = "date") LocalDateTime date) {
+    @GetMapping("/mission/list")
+    public ResponseEntity<?> getMissionList(@RequestParam(name = "challengeId") Long challengeId, @RequestParam(name = "date") LocalDateTime date) {
         return ResponseEntity.ok().body(missionService.getMission(challengeId,date));
     }
 
-    @PostMapping("/misson")
+    @PostMapping("/mission")
     public ResponseEntity<?> registerMission(@RequestHeader("Login_Member_Id") Long loginMemberId, @RequestBody MissionDto missionDto) {
         missionService.registerMission(loginMemberId,missionDto);
         return ResponseEntity.ok().body("ok");
@@ -28,8 +28,8 @@ public class MissionController {
 
     @GetMapping("/mission/certification")
     public ResponseEntity<?> certifiedMission(@RequestHeader("Login_Member_Id") Long loginMemberId,
-                                              @PathVariable(name = "challengeId") Long challengeId,
-                                              @PathVariable(name = "success") boolean success){
+                                              @RequestParam(name = "challengeId") Long challengeId,
+                                              @RequestParam(name = "success") boolean success){
         missionService.certifiedMission(loginMemberId,challengeId,success);
         return ResponseEntity.ok().body("ok");
     }
