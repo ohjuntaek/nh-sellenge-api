@@ -49,9 +49,7 @@ public class ChallengeService {
     public Long registerChallenge(Long loginMemberId, ChallengeDto challengeDto) {
         Member member = memberRepository.findById(loginMemberId)
                 .orElseThrow(EntityNotFoundException::new);
-        if (!member.getIsSeller()) {
-            throw new IllegalArgumentException("판매자만 챌린지 등록 가능");
-        }
+        if (!member.getIsSeller()) throw new IllegalArgumentException("판매자만 챌린지 등록 가능");
         Challenge challenge = challengeDto.to(member);
 
         Challenge save = challengeRepository.save(challenge);
@@ -70,9 +68,7 @@ public class ChallengeService {
 
         JoinChallenge joinChallenge = JoinChallenge.of(member, challenge, joinChallengeDto.getJoinMoney());
         JoinChallenge find = joinChallengeRepository.findByChallenge_IdAndMember_Id(challengeId, loginMemberId);
-        if (find != null) {
-            throw new JoinAlreadyException();
-        }
+        if (find != null) throw new JoinAlreadyException();
         JoinChallenge save = joinChallengeRepository.save(joinChallenge);
 
         // 투자금 지급 지시
@@ -84,6 +80,8 @@ public class ChallengeService {
         NhApiHeader apiHeader = nhTransactionService.buildApiHeader(ApiName.P2PNInvestmentPaymentOrder.name());
 
         Long loanNo = nhTransactionService.getCountNhTx();
+        challenge.setLoanNum(loanNo);
+        challengeRepository.save(challenge);
         InvestmentDto investmentDto = InvestmentDto.of(
                 loanNo,
                 sellerAccountNo,
@@ -94,10 +92,8 @@ public class ChallengeService {
         HttpEntity<InvestmentDto> request = new HttpEntity<>(investmentDto, httpHeaders);
         InvestmentDto response = restTemplate.postForObject(ApiName.P2PNInvestmentPaymentOrder.getUri(), request, InvestmentDto.class);
 
-        if (!response.getHeader().getRpcd().equals(NH_API_SUCCESS)) {
+        if (!response.getHeader().getRpcd().equals(NH_API_SUCCESS))
             throw new IllegalStateException(response.getHeader().getRsms());
-        }
-
         return save.getId();
     }
 
@@ -121,9 +117,7 @@ public class ChallengeService {
         Member loginMember = memberRepository.findById(loginMemberId)
                 .orElseThrow(EntityNotFoundException::new);
         List<JoinChallenge> totalList = joinChallengeRepository.findAllByMember(loginMember);
-        if (totalList.size() == 0) {
-            return new StatDto(BigDecimal.ZERO, 0, 0, 0, 0);
-        }
+        if (totalList.size() == 0) return new StatDto(BigDecimal.ZERO, 0, 0, 0, 0);
 
         List<JoinChallenge> finishList = totalList.stream()
                 .filter(JoinChallenge::getFinish)

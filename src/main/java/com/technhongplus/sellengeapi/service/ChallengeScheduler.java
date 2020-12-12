@@ -53,7 +53,7 @@ public class ChallengeScheduler {
 
                 HttpHeaders httpHeaders = SellengeApiApplication.getHttpHeaders();
                 NhApiHeader apiHeader = nhTransactionService.buildApiHeader(ApiName.P2PNInterestRepayment.name());
-                Long loanNo = nhTransactionService.getCountNhTx();
+                Long loanNo = challenge.getLoanNum();
                 if(missions.size() >= days){
                     //100% 미션 성공금 지급
                     RepaymenDto repaymenDto = RepaymenDto.of(

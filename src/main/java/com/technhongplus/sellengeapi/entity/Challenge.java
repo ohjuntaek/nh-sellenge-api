@@ -36,6 +36,7 @@ public class Challenge {
     private Integer minMemberCount; // 최소인원
     private Integer maxMemberCount; // 최대인원
     private String challengeDetailContent; // 챌린지상세내용
+    private Long loanNum; //대출 번호
 
     @Convert(converter = ImageUrlsConverter.class)
     private List<String> attachUrls; // 첨부이미지url
