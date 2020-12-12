@@ -13,33 +13,20 @@ spring:
       max-file-size: 500MB
       max-request-size: 500MB
 
-
-  h2:
-    console:
-      enabled: true
-nh:
-  juntaek:
-    accessToken: aea4f248cce5af78f3cc5c62827bcdf5db1ded061977417a29615b2c3221ceda
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://sellenge-db.cxxtoeaihq4h.us-west-2.rds.amazonaws.com:3306/sellenge?serverTimezone=UTC&characterEncoding=UTF-8
+    username: admin
+    password: sellenge
 
 logging:
   level:
     org.apache.http: DEBUG
 
-#---
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/sellenge?serverTimezone=UTC&characterEncoding=UTF-8
-#    username: root
-#    password: password
-#---
-#spring:
-#  profiles:
-#    active: dev
-#  datasource:
-#    driver-class-name: com.mysql.jdbc.Driver
-#    url: jdbc:mysql://sellenge-db.cxxtoeaihq4h.us-west-2.rds.amazonaws.com:3306/sellenge-db
-#    username: sellenge
-#    password: sellenge
-#---
-
+nh:
+  juntaek:
+    accessToken: 'aea4f248cce5af78f3cc5c62827bcdf5db1ded061977417a29615b2c3221ceda'
+    birthday: '19501211'
+    code: '000710'
+    seller_account_no: '3020000003086'
+    member_account_no: '3020000003085'

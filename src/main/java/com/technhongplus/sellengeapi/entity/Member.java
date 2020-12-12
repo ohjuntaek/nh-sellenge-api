@@ -17,11 +17,22 @@ public class Member {
     private String loginId;
     private String name;
     private String businessNumber;
+    private String birthday;
     private Boolean isSeller;
 
     private String virtualAccount;
+    private String p2pCmtmNo; // P2P약정번호
+    private String finAccount;
+    private String accountNo;
 
-    public static Member of(String loginId, String name, String businessNumber, Boolean isSeller) {
-        return new Member(null, loginId, name, businessNumber, isSeller, null);
+    public static Member of(
+            String loginId,
+            String name,
+            String businessNumber,
+            String birthday,
+            String accountNo,
+            Boolean isSeller
+    ) {
+        return new Member(null, loginId, name, businessNumber, birthday, isSeller, null, null, null, accountNo);
     }
 }
