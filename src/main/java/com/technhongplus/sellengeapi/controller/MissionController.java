@@ -26,4 +26,12 @@ public class MissionController {
         return ResponseEntity.ok().body("ok");
     }
 
+    @GetMapping("/mission/certification")
+    public ResponseEntity<?> certifiedMission(@RequestHeader("Login_Member_Id") Long loginMemberId,
+                                              @PathVariable(name = "challengeId") Long challengeId,
+                                              @PathVariable(name = "success") boolean success){
+        missionService.certifiedMission(loginMemberId,challengeId,success);
+        return ResponseEntity.ok().body("ok");
+    }
+
 }

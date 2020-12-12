@@ -35,4 +35,12 @@ public class MissionService {
         JoinChallenge joinChallenge = joinChallengeRepository.findById(missionDto.getChallengeId()).get();
         missionRepository.save(Mission.of(joinChallenge,missionDto.getImageUrl(),missionDto.getProofDate()));
     }
+
+    @Transactional
+    public void certifiedMission(Long loginMemberId, Long challengeId, boolean success){
+        JoinChallenge joinChallenge = joinChallengeRepository.findByChallenge_IdAndMember_Id(challengeId,loginMemberId);
+        Mission mission = missionRepository.findByJoinChallenge_Id(joinChallenge.getId());
+        mission.setSuccess(success);
+        missionRepository.save(mission);
+    }
 }
