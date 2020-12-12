@@ -19,7 +19,18 @@ public class Mission {
     @JoinColumn(name = "JOIN_ID")
     private JoinChallenge joinChallenge;
 
+    private String imageUrl; // 인증 이미지
+
     private LocalDateTime proofDate; // 인증일시
 
     private Boolean success; // 성공여부
+
+    public static Mission of(JoinChallenge joinChallenge,String imageUrl ,LocalDateTime proofDate){
+        return Mission.builder()
+            .joinChallenge(joinChallenge)
+            .imageUrl(imageUrl)
+            .proofDate(proofDate)
+            .success(false)
+            .build();
+    }
 }
