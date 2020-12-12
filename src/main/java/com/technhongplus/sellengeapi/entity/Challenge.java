@@ -19,8 +19,10 @@ public class Challenge {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
-    private Member member;
+    private Member seller;
 
+    @Enumerated(EnumType.STRING)
+    private ChallengeCategory category;
     private String repImageUrl; // 대표이미지url
     private String itemName; // 상품명
     private String challengeName; // 챌린지명

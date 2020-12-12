@@ -23,7 +23,7 @@ public class SellengeApiApplication {
     @Bean
     public RestTemplate nhRestTemplate() {
         RestTemplate restTemplate = new RestTemplate();
-//        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         restTemplate.setMessageConverters(Collections.singletonList(jacksonConverter()));
         return restTemplate;
     }

@@ -1,7 +1,11 @@
 package com.technhongplus.sellengeapi.service;
 
+import com.technhongplus.sellengeapi.ApiName;
+import com.technhongplus.sellengeapi.SellengeApiApplication;
 import com.technhongplus.sellengeapi.dto.ChallengeDto;
 import com.technhongplus.sellengeapi.dto.JoinChallengeDto;
+import com.technhongplus.sellengeapi.dto.nh.InvestmentDto;
+import com.technhongplus.sellengeapi.dto.nh.NhApiHeader;
 import com.technhongplus.sellengeapi.entity.Challenge;
 import com.technhongplus.sellengeapi.entity.JoinChallenge;
 import com.technhongplus.sellengeapi.entity.Member;
@@ -9,20 +13,27 @@ import com.technhongplus.sellengeapi.repository.ChallengeRepository;
 import com.technhongplus.sellengeapi.repository.JoinChallengeRepository;
 import com.technhongplus.sellengeapi.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.technhongplus.sellengeapi.service.NhTransactionService.NH_API_SUCCESS;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ChallengeService {
+    private final NhTransactionService nhTransactionService;
     private final MemberRepository memberRepository;
     private final ChallengeRepository challengeRepository;
     private final JoinChallengeRepository joinChallengeRepository;
+    private final RestTemplate restTemplate;
 
     /**
      * 판매자가 챌린지를 등록한다.
@@ -51,8 +62,31 @@ public class ChallengeService {
         Challenge challenge = challengeRepository.findById(challengeId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        // TODO 결제 by joinDto
         JoinChallenge save = joinChallengeRepository.save(JoinChallenge.of(member, challenge));
+
+        // 투자금 지급 지시
+        String sellerAccountNo = challenge.getSeller().getAccountNo();
+        String memberVirtualAccountNo = member.getVirtualAccount();
+        String invAmt = joinChallengeDto.getJoinMoney().toString();
+
+        HttpHeaders httpHeaders = SellengeApiApplication.getHttpHeaders();
+        NhApiHeader apiHeader = nhTransactionService.buildApiHeader(ApiName.P2PNInvestmentPaymentOrder.name());
+
+        Long loanNo = nhTransactionService.getCountNhTx();
+        InvestmentDto investmentDto = InvestmentDto.of(
+                loanNo,
+                sellerAccountNo,
+                memberVirtualAccountNo,
+                invAmt,
+                apiHeader
+        );
+        HttpEntity<InvestmentDto> request = new HttpEntity<>(investmentDto, httpHeaders);
+        InvestmentDto response = restTemplate.postForObject(ApiName.P2PNInvestmentPaymentOrder.getUri(), request, InvestmentDto.class);
+
+        if (!response.getHeader().getRpcd().equals(NH_API_SUCCESS)) {
+            throw new IllegalStateException(response.getHeader().getRsms());
+        }
+
         return save.getId();
     }
 
