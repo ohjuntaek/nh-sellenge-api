@@ -25,8 +25,14 @@ logging:
 
 nh:
   juntaek:
-    accessToken: 'aea4f248cce5af78f3cc5c62827bcdf5db1ded061977417a29615b2c3221ceda'
+#    accessToken: 'aea4f248cce5af78f3cc5c62827bcdf5db1ded061977417a29615b2c3221ceda'
+#    birthday: '19501211'
+#    code: '000710'
+#    seller_account_no: '3020000003086'
+#    member_account_no: '3020000003085'
+
+    accessToken: '02a5fde7dfe6c436ff31088e838b84e6077bf6492b128d854883fdf1f6f70511'
     birthday: '19501211'
-    code: '000710'
-    seller_account_no: '3020000003086'
-    member_account_no: '3020000003085'
+    code: '000708'
+    seller_account_no: '3510000003027'
+    member_account_no: '3510000003025'

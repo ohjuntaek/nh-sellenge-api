@@ -7,7 +7,8 @@ public enum ApiName {
     P2PNVirtualAccountNumberRequest, // 투자금관리용가상계좌발급
     OpenFinAccountDirect, // 핀-어카운트 직접발급
     CheckOpenFinAccountDirect, // 핀어카운트 직접발급 확인
-    P2PNInvestmentPaymentOrder // 투자금지급지시
+    P2PNInvestmentPaymentOrder,// 투자금지급지시
+    P2PNInterestRepayment // 원리금 상환
     ;
 
 
