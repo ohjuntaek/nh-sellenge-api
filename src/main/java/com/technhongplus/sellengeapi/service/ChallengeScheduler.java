@@ -2,8 +2,8 @@ package com.technhongplus.sellengeapi.service;
 
 import com.technhongplus.sellengeapi.ApiName;
 import com.technhongplus.sellengeapi.SellengeApiApplication;
-import com.technhongplus.sellengeapi.dto.nh.InvestmentDto;
 import com.technhongplus.sellengeapi.dto.nh.NhApiHeader;
+import com.technhongplus.sellengeapi.dto.nh.RepaymenDto;
 import com.technhongplus.sellengeapi.entity.Challenge;
 import com.technhongplus.sellengeapi.entity.JoinChallenge;
 import com.technhongplus.sellengeapi.entity.Mission;
@@ -58,15 +58,15 @@ public class ChallengeScheduler {
                     NhApiHeader apiHeader = nhTransactionService.buildApiHeader(ApiName.P2PNInterestRepayment.name());
 
                     Long loanNo = nhTransactionService.getCountNhTx();
-                    InvestmentDto investmentDto = InvestmentDto.of(
+                    RepaymenDto repaymenDto = RepaymenDto.of(
                         loanNo,
                         sellerAccountNo,
-                        memberVirtualAccountNo,
+                        invAmt,
                         invAmt,
                         apiHeader
                     );
-                    HttpEntity<InvestmentDto> request = new HttpEntity<>(investmentDto, httpHeaders);
-                    restTemplate.postForObject(ApiName.P2PNInterestRepayment.getUri(), request, InvestmentDto.class);
+                    HttpEntity<RepaymenDto> request = new HttpEntity<>(repaymenDto, httpHeaders);
+                    restTemplate.postForObject(ApiName.P2PNInterestRepayment.getUri(), request, RepaymenDto.class);
                 }
             });
 
