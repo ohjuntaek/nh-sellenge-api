@@ -2,6 +2,7 @@ package com.technhongplus.sellengeapi.controller;
 
 import com.technhongplus.sellengeapi.dto.ChallengeDto;
 import com.technhongplus.sellengeapi.dto.JoinChallengeDto;
+import com.technhongplus.sellengeapi.dto.StatDto;
 import com.technhongplus.sellengeapi.dto.exception.ExceptionDto;
 import com.technhongplus.sellengeapi.dto.exception.JoinAlreadyException;
 import com.technhongplus.sellengeapi.entity.Challenge;
@@ -50,5 +51,11 @@ public class ChallengeController {
     @ExceptionHandler(JoinAlreadyException.class)
     public ResponseEntity<?> joinException(JoinAlreadyException e) {
         return ResponseEntity.ok().body(new ExceptionDto("500", e.getMessage()));
+    }
+
+    @GetMapping("/challenge/stat")
+    public ResponseEntity<?> getStat(@RequestHeader("Login_Member_Id") Long loginMemberId) {
+        StatDto statDto = challengeService.getStat(loginMemberId);
+        return ResponseEntity.ok().body(statDto);
     }
 }

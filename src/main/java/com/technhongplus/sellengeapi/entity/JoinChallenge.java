@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Getter @Setter
@@ -28,7 +29,12 @@ public class JoinChallenge {
     @EqualsAndHashCode.Include
     private Challenge challenge;
 
-    public static JoinChallenge of(Member member, Challenge challenge) {
-        return new JoinChallenge(null, member, challenge);
+    private BigDecimal joinAmount;
+
+    private Boolean finish;
+    private Boolean success;
+
+    public static JoinChallenge of(Member member, Challenge challenge, BigDecimal joinAmount) {
+        return new JoinChallenge(null, member, challenge, joinAmount, false, false);
     }
 }

@@ -4,6 +4,7 @@ import com.technhongplus.sellengeapi.ApiName;
 import com.technhongplus.sellengeapi.SellengeApiApplication;
 import com.technhongplus.sellengeapi.dto.ChallengeDto;
 import com.technhongplus.sellengeapi.dto.JoinChallengeDto;
+import com.technhongplus.sellengeapi.dto.StatDto;
 import com.technhongplus.sellengeapi.dto.exception.JoinAlreadyException;
 import com.technhongplus.sellengeapi.dto.nh.InvestmentDto;
 import com.technhongplus.sellengeapi.dto.nh.NhApiHeader;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +68,7 @@ public class ChallengeService {
         Challenge challenge = challengeRepository.findById(challengeId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        JoinChallenge joinChallenge = JoinChallenge.of(member, challenge);
+        JoinChallenge joinChallenge = JoinChallenge.of(member, challenge, joinChallengeDto.getJoinMoney());
         JoinChallenge find = joinChallengeRepository.findByChallenge_IdAndMember_Id(challengeId, loginMemberId);
         if (find != null) {
             throw new JoinAlreadyException();
@@ -113,5 +115,35 @@ public class ChallengeService {
         return challenges.stream()
                 .map(ChallengeDto::from)
                 .collect(Collectors.toList());
+    }
+
+    public StatDto getStat(Long loginMemberId) {
+        Member loginMember = memberRepository.findById(loginMemberId)
+                .orElseThrow(EntityNotFoundException::new);
+        List<JoinChallenge> totalList = joinChallengeRepository.findAllByMember(loginMember);
+        if (totalList.size() == 0) {
+            return new StatDto(BigDecimal.ZERO, 0, 0, 0, 0);
+        }
+
+        List<JoinChallenge> finishList = totalList.stream()
+                .filter(JoinChallenge::getFinish)
+                .collect(Collectors.toList());
+
+        List<JoinChallenge> successList = totalList.stream()
+                .filter(JoinChallenge::getSuccess)
+                .collect(Collectors.toList());
+        BigDecimal sum = totalList.stream()
+                .map(JoinChallenge::getJoinAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        int successRate = successList.size() / totalList.size();
+
+        return StatDto.builder()
+                .totalInvestMoney(sum)
+                .totalChallengeCount(totalList.size())
+                .doingChallengeCount(totalList.size() - finishList.size())
+                .successCount(successList.size())
+                .successRate(successRate)
+                .build();
     }
 }

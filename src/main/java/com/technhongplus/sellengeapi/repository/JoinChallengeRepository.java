@@ -3,6 +3,7 @@ package com.technhongplus.sellengeapi.repository;
 
 import com.technhongplus.sellengeapi.entity.Challenge;
 import com.technhongplus.sellengeapi.entity.JoinChallenge;
+import com.technhongplus.sellengeapi.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,5 +13,7 @@ public interface JoinChallengeRepository extends JpaRepository<JoinChallenge, Lo
     List<JoinChallenge> findAllByChallenge_Id(Long challengeId);
 
     List<JoinChallenge> findAllByChallengeIn(List<Challenge> challenges);
+
+    List<JoinChallenge> findAllByMember(Member member);
 
 }
